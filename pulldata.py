@@ -134,6 +134,7 @@ def most_divisive(pagenum,pageres): #same thing as above, but returns the questi
 def analyze_page_generic(pagenum,path,titlestr): #performs full analysis on one page of questions. Takes in the page number, the path to the data file, and the title of the output file. saves the data as a pdf in that location. 
     all_data,all_col_names = load_dat(path)
     gend,dept,ifint,prog = demo_info(all_data)
+    distr = group_depts(dept)
     results = pageres(pagenum,all_data)
     
     start,stop = getpage(pagenum)
@@ -168,8 +169,31 @@ def analyze_page_generic(pagenum,path,titlestr): #performs full analysis on one 
     plt.xticks(list(range(1,sum(keep)+1)))
     plt.title('Divisiveness of questions on page')
     pp.savefig(fig)
-    plt.close('all')
 
+    fig = plt.figure()
+    ssh = (distr=="SSH")
+    stem = (distr=="STEM")
+    stein = (distr=="Steinhardt")
+    tandon = (distr=="Tandon")
+    prof = (distr=="Prof. Schools")
+    other = (distr=="Other")
+    yvals = [np.nansum(results[ssh,:]),np.nansum(results[stem,:]),np.nansum(results[stein,:]),np.nansum(results[tandon,:]),np.nansum(results[prof,:]),np.nansum(results[other,:])]
+    plt.bar([1,2,3,4,5,6],yvals,tick_label = np.array(["SSH","STEM","Steinhardt","Tandon","Prof. Schools","Other"]))
+    plt.title('Total interest per district')
+    pp.savefig(fig)
+
+    fig = plt.figure()
+    yvals2 = [sum(ssh),sum(stem),sum(stein),sum(tandon),sum(prof),sum(other)]
+    plt.bar([1,2,3,4,5,6],yvals2,tick_label = np.array(["SSH","STEM","Steinhardt","Tandon","Prof. Schools","Other"]))
+    plt.title('Total participation per district')
+    pp.savefig(fig)
+    
+    fig = plt.figure()
+    plt.bar([1,2,3,4,5,6],np.array(yvals)/np.array(yvals2),tick_label = np.array(["SSH","STEM","Steinhardt","Tandon","Prof. Schools","Other"]))
+    plt.title('interest / participation per district')
+    pp.savefig(fig)
+    
+    plt.close('all')
     pp.close()    
 
 def group_depts(depts):
