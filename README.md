@@ -1,14 +1,6 @@
 # pulldata.py
 
-##	Some data analysis software for GSOC's 2020 bargaining survey,
-##	As written by Iraj Eshghi. I don't care how you use this, it's not licensed or anything
-##
-##	If you have any questions email me at irajeshghi@gmail.com
-##	No I will not be maintaining this repository regularly, but I might add stuff in the future.
-##	I will eventually rewrite this in R, once I've had the chance to learn R
-##
-##	This is specifically made to read the jotform results of our survey. If you're an NYU grad student and haven't filled it out, 
-##	it's here: https://form.jotform.com/93175940639164
+##	Some data analysis software for GSOC's 2020 bargaining survey, as written by Iraj Eshghi. I don't care how you use this, it's not licensed or anything. If you have any questions email me at irajeshghi@gmail.com. No I will not be maintaining this repository regularly, but I might add stuff in the future. I will eventually rewrite this in R, once I've had the chance to learn R. This is specifically made to read the jotform results of our survey. If you're an NYU grad student and haven't filled it out, it's here: https://form.jotform.com/93175940639164
 
 ##How to use this code:
 
