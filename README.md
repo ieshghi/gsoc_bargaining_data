@@ -1,6 +1,6 @@
 # pulldata.py
 
-##	Some data analysis software for GSOC's 2020 bargaining survey, as written by Iraj Eshghi. I don't care how you use this, it's not licensed or anything. If you have any questions email me at irajeshghi@gmail.com. No I will not be maintaining this repository regularly, but I might add stuff in the future. I will eventually rewrite this in R, once I've had the chance to learn R. This is specifically made to read the jotform results of our survey. If you're an NYU grad student and haven't filled it out, it's here: https://form.jotform.com/93175940639164
+Some data analysis software for GSOC's 2020 bargaining survey, as written by Iraj Eshghi. I don't care how you use this, it's not licensed or anything. If you have any questions email me at irajeshghi@gmail.com. No I will not be maintaining this repository regularly, but I might add stuff in the future. I will eventually rewrite this in R, once I've had the chance to learn R. This is specifically made to read the jotform results of our survey. If you're an NYU grad student and haven't filled it out, it's here: https://form.jotform.com/93175940639164
 
 ##How to use this code:
 
@@ -42,4 +42,5 @@ In the default form, the code breaks down data by gender (m/f/nonbinary, yes thi
 There are many other potential demographic breakdown parameters, and you can find them all in the demo_info() function. Feel free to go into the code, and ask demo_info to return different arrays of demographic info, and then change the analysis function to make figures with those data instead.
 
 ##That's all I've got. I will be adding more probably.
+
 #Workers of the world, unite.
