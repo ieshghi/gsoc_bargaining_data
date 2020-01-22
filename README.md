@@ -43,6 +43,6 @@ In the default form, the code breaks down data by gender (m/f/nonbinary, yes thi
 
 There are many other potential demographic breakdown parameters, and you can find them all in the demo_info() function. Feel free to go into the code, and ask demo_info to return different arrays of demographic info, and then change the analysis function to make figures with those data instead.
 
-## That's all I've got. I will be adding more probably.
+That's all I've got. I will be adding more probably.
 
 # Workers of the world, unite.
