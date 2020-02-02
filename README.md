@@ -41,8 +41,8 @@ The one that simply performs analysis is `analyze_question_generic()`. Its input
 This then breaks down the responses by demographic group. The choice of demographic groups is made in the code itself, but you can go ahead and change it. 
 In the default form, the code breaks down data by gender (m/f/nonbinary, yes this is coarse and doesn't do justice to the variety of genders out there. We will be improving it), by district, by program (phd / masters) and by whether or not the workers in question are domestic. 
 
-There are many other potential demographic breakdown parameters, and you can find them all in the demo_info() function. Feel free to go into the code, and ask demo_info to return different arrays of demographic info, and then change the analysis function to make figures with those data instead.
+There are many other potential demographic breakdown parameters, and you can find them all in the `demo_info()` function. Feel free to go into the code, and ask `demo_info()` to return different arrays of demographic info, and then change the analysis function to make figures with those data instead.
 
-## That's all I've got. I will be adding more probably.
+That's all I've got. I will be adding more probably.
 
-# Workers of the world, unite.
+### Workers of the world, unite.
