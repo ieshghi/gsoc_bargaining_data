@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 plt.rcParams.update({'figure.max_open_warning': 0})
 from matplotlib.backends.backend_pdf import PdfPages
+plt.style.use('ggplot')
 
 def load_dat(path): #given an excel file at the location 'path', loads it and converts it to useable python object
     apd = pd.read_excel(path) #opens file in pandas file format
@@ -61,7 +62,7 @@ def demo_info(data): #pulls all the demographic info, takes in the data array ge
     paysource = demo_data[:,20]
     commute = demo_data[:,21]
 
-    return gend,dept,if_int,prog #these are some demographic information pieces we want to use. Can ask to pull others if need be
+    return gend,dept,if_int,prog,paysource,race #these are some demographic information pieces we want to use. Can ask to pull others if need be
 
 def getpage(n): #returns relevant columns for a given page (first,last inclusive)
     if n==3:
@@ -84,6 +85,8 @@ def getpage(n): #returns relevant columns for a given page (first,last inclusive
         return 106,112
     elif n==12:
         return 113,120
+    elif n==13:
+        return 114
     else:
         print("page number requested is either not present in data, or isn't one of the ones we're supposed to be analyzing >:( \n")
 
@@ -131,6 +134,144 @@ def most_divisive(pagenum,pageres): #same thing as above, but returns the questi
 
     return maxloc_fin
 
+def makeplots(dat,boolfilt,name):
+    fdat = dat[boolfilt==1,:]
+    mn = np.nanmean(fdat)
+    nq = sum(np.logical_not(np.isnan(fdat[1,:])))
+    xv = []
+    for i in range(nq):
+        xv = np.append(xv,"Q"+str(i+1))
+    
+    ind = list(range(nq))
+
+    plt.figure()
+    plt.subplot(211)
+    plt.bar(ind,mn)
+    plt.xticks(ind,xv)
+    plt.title('Average interest, '+name+' students')
+
+    ikeep = np.logical_not(np.isnan(fdat[1,:]))
+    fdat = fdat[:,ikeep]
+    dat2 = [sum(fdat==1,0),sum(fdat==2,0),sum(fdat==3,0),sum(fdat==4,0),sum(fdat==5,0)]
+    plt.subplot(212)
+    plot_stacked_bar(dat2,category_labels=xv)
+    plt.title('all responses, '+name+' students')
+    plt.tight_layout()
+
+
+
+def plot_stacked_bar(data, category_labels=None, 
+                     show_values=False, value_format="{}", y_label=None, 
+                     grid=True, reverse=False):
+    ny = len(data[0])
+    ind = list(range(ny))
+
+    axes = []
+    cum_size = np.zeros(ny)
+
+    data = np.array(data)
+
+    if reverse:
+        data = np.flip(data, axis=1)
+        category_labels = reversed(category_labels)
+
+    for i, row_data in enumerate(data):
+        axes.append(plt.bar(ind, row_data, bottom=cum_size))
+        cum_size += row_data
+
+    plt.xticks(ind, category_labels)
+
+    #if y_label:
+    #    plt.ylabel(y_label)
+
+    #plt.legend()
+
+    #if grid:
+    #    plt.grid()
+
+def final_script(path):
+    all_data,all_col_names = load_dat(path)
+    gend,dept,ifint,prog,pay,race = demo_info(all_data)
+    distr = group_depts(dept)
+    
+
+    # First page we analyze: page 3
+    res3 = pageres(3,all_data)
+    
+    # All students
+    makeplots(res3,np.ones(gend.shape),"All")
+    plt.savefig('results/p3all.eps')
+    plt.close('all')
+    # non-doctoral students
+    makeplots(res3,prog=="Master's","Master's")
+    plt.savefig('results/p3mast.eps')
+    plt.close('all')
+    # non-doctoral international students
+    makeplots(res3,(prog=="Master's")*(ifint=="Yes"),"International Master's") #Currently there are 0 people in this category
+    plt.savefig('results/p3intmast.eps')
+    plt.close('all')
+
+    # Next, analyze page 4
+    res4 = pageres(4,all_data)
+
+    # All students
+    makeplots(res4,np.ones(gend.shape),"All")
+    plt.savefig('results/p4all.eps')
+    plt.close('all')
+    # non fully-funded students
+    makeplots(res4,pay!="'Stipend/tuition waiver","Non fully-funded")
+    plt.savefig('results/p4notfund.eps')
+    plt.close('all')
+    # international students
+    makeplots(res4,(ifint=="Yes"),"International")
+    plt.savefig('results/p4int.eps')
+    plt.close('all')
+    # male students
+    makeplots(res4,(gend=="Man"),"Male")
+    plt.savefig('results/p4men.eps')
+    plt.close('all')
+    # female students
+    makeplots(res4,(gend=="Woman"),"Female")
+    plt.savefig('results/p4women.eps')
+    plt.close('all')
+    # stem students
+    makeplots(res4,(distr=="STEM"),"STEM")
+    plt.savefig('results/p4stem.eps')
+    plt.close('all')
+    # ssh students
+    makeplots(res4,(distr=="SSH"),"SSH")
+    plt.savefig('results/p4ssh.eps')
+    plt.close('all')
+    # profschool students
+    makeplots(res4,(distr=="Prof. Schools"),"Prof. Schools")
+    plt.savefig('results/p4prof.eps')
+    plt.close('all')
+    # tandon students
+    makeplots(res4,(distr=="Tandon"),"Tandon")
+    plt.savefig('results/p4tandon.eps')
+    plt.close('all')
+    # steinhardt students
+    makeplots(res4,(distr=="Steinhardt"),"Steinhardt")
+    plt.savefig('results/p4steinhardt.eps')
+    plt.close('all')
+
+    # Next, analyze page 11
+    res11 = pageres(11,all_data)
+
+    # All students
+    makeplots(res11,np.ones(gend.shape),"All")
+    plt.savefig('results/p11all.eps')
+    plt.close('all')
+    # international students
+    makeplots(res11,ifint=="Yes","International")
+    plt.savefig('results/p11int.eps')
+    plt.close('all')
+    # non-funded international students
+    makeplots(res11,(pay!="Stipend/tuition waiver")*(ifint=="Yes"),"Non fully-funded international")
+    plt.savefig('results/p11intnotfund.eps')
+    plt.close('all')
+
+
 def analyze_page_generic(pagenum,path,titlestr): #performs full analysis on one page of questions. Takes in the page number, the path to the data file, and the title of the output file. saves the data as a pdf in that location. 
     all_data,all_col_names = load_dat(path)
     gend,dept,ifint,prog = demo_info(all_data)
@@ -151,17 +292,17 @@ def analyze_page_generic(pagenum,path,titlestr): #performs full analysis on one 
         if not np.isnan(sum(colres)):
             yvals = [sum(colres==i) for i in range(1,6)]
             plt.bar([1,2,3,4,5],yvals,tick_label = np.array(["Not imp.","Not too imp.","Imp.","Very imp.","Gotta"])) #bar plots for each question
-            plt.title(col_names[i],fontsize=7,wrap=True)
+            plt.title(col_names[i],wrap=True)
             pp.savefig(fig)
         
-    tot_resp = sum(results,0)
+    tot_resp = np.mean(results,0)
     std_resp = np.std(results,0)
     keep = (np.logical_not(np.isnan(tot_resp)))
 
     fig = plt.figure()
-    plt.plot(range(1,sum(keep)+1),tot_resp[keep],".") #plots total interest for all the questions
+    plt.plot(range(1,sum(keep)+1),tot_resp[keep],".") #plots average interest for all the questions
     plt.xticks(list(range(1,sum(keep)+1)))
-    plt.title('Total interest per question on page')
+    plt.title('Average interest per question on page')
     pp.savefig(fig)
     
     fig = plt.figure()
@@ -169,6 +310,12 @@ def analyze_page_generic(pagenum,path,titlestr): #performs full analysis on one 
     plt.xticks(list(range(1,sum(keep)+1)))
     plt.title('Divisiveness of questions on page')
     pp.savefig(fig)
+
+   # fig = plt.figure()
+   # plt.plot(range(1,sum(keep)+1),std_resp[keep]/tot_resp[keep],".") #same thing as above, with normalized standard deviation
+   # plt.xticks(list(range(1,sum(keep)+1)))
+   # plt.title('Divisiveness of questions on page')
+   # pp.savefig(fig)
 
     fig = plt.figure()
     ssh = (distr=="SSH")
@@ -262,7 +409,7 @@ def analyze_question_generic(pagenum,qnum,titlestr,path): #Once a specific quest
 def scripty(path): #just a script for me
     print("Pagewise analysis...\n")
     #Analyze all non optional pages and put output in the results folder
-    pages = [3,4,5,6,8,10,11]
+    pages = [3,4,11]
     for p in pages:
         analyze_page_generic(p,path,"results/page"+str(p)+".pdf")
     
